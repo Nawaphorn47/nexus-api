@@ -1,0 +1,22 @@
+// prisma/schema.prisma
+
+generator client {
+  provider      = "prisma-client-js"
+  // ใส่ binaryTargets เพื่อให้ Prisma ทำงานใน Docker (Alpine Linux) ได้อย่างไร้ปัญหา
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users") // แนะนำให้ตั้งชื่อตารางในฐานข้อมูลเป็นพหูพจน์ (users) ตาม Best Practice
+}
